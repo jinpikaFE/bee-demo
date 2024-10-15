@@ -71,15 +71,15 @@
             "title": "Test",
             "type": "object",
             "properties": {
-                "Age": {
-                    "type": "integer",
-                    "format": "int64"
-                },
                 "Id": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "Name": {
+                "age": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
                     "type": "string"
                 }
             }

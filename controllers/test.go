@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"bee-demo/models"
+	"bee-demo/utils"
+	"log"
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/server/web"
@@ -33,11 +35,16 @@ func (c *TestController) GetTests() {
 // @router / [post]
 func (c *TestController) CreateTest() {
 	var test models.Test
-	if err := c.ParseForm(&test); err != nil {
+	
+	// 使用通用解析函数处理请求体
+	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
+		c.Data["json"] = map[string]string{"error": err.Error()}
 		c.Ctx.Output.SetStatus(400)
-		c.Ctx.Output.Body([]byte("Invalid input"))
+		c.ServeJSON()
 		return
 	}
+
+	log.Println(&test)
 	o := orm.NewOrm()
 	_, err := o.Insert(&test)
 	if err != nil {
