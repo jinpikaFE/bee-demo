@@ -23,12 +23,10 @@ func (c *TestController) GetTests() {
 	o := orm.NewOrm()
 	_, err := o.QueryTable(new(models.Test)).All(&tests)
 	if err != nil {
-		c.Ctx.Output.SetStatus(500)
-		c.Ctx.Output.Body([]byte("Error fetching tests"))
+		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
 	}
-	c.Data["json"] = tests
-	c.ServeJSON()
+	models.RespondWithJSON(&c.Controller, "查询成功", tests)
 }
 
 // @Title 创建测试数据
@@ -40,12 +38,11 @@ func (c *TestController) GetTests() {
 // @router / [post]
 func (c *TestController) CreateTest() {
 	var test models.Test
-	
+
 	// 使用通用解析函数处理请求体
 	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
-		c.Data["json"] = map[string]string{"error": err.Error()}
-		c.Ctx.Output.SetStatus(400)
-		c.ServeJSON()
+
+		models.RespondWithJSON(&c.Controller, "", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
 
@@ -53,13 +50,10 @@ func (c *TestController) CreateTest() {
 	o := orm.NewOrm()
 	_, err := o.Insert(&test)
 	if err != nil {
-		c.Ctx.Output.SetStatus(500)
-		c.Ctx.Output.Body([]byte("Error creating test"))
+		models.RespondWithJSON(&c.Controller, "创建失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
 	}
-	c.Ctx.Output.SetStatus(201)
-	c.Data["json"] = test
-	c.ServeJSON()
+	models.RespondWithJSON(&c.Controller, "创建成功", test)
 }
 
 // @Title 获取指定测试数据
@@ -72,19 +66,16 @@ func (c *TestController) CreateTest() {
 func (c *TestController) GetTest() {
 	id, err := c.GetInt(":id")
 	if err != nil {
-		c.Ctx.Output.SetStatus(400)
-		c.Ctx.Output.Body([]byte("Invalid test ID"))
+		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
 	o := orm.NewOrm()
 	test := models.Test{Id: id}
 	if err := o.Read(&test); err != nil {
-		c.Ctx.Output.SetStatus(404)
-		c.Ctx.Output.Body([]byte("Test not found"))
+		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 404, 500)
 		return
 	}
-	c.Data["json"] = test
-	c.ServeJSON()
+	models.RespondWithJSON(&c.Controller, "查询成功", test)
 }
 
 // @Title 更新测试数据
@@ -99,29 +90,24 @@ func (c *TestController) GetTest() {
 func (c *TestController) UpdateTest() {
 	id, err := c.GetInt(":id")
 	if err != nil {
-		c.Ctx.Output.SetStatus(400)
-		c.Ctx.Output.Body([]byte("Invalid test ID"))
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 400)
 		return
 	}
 	o := orm.NewOrm()
 	test := models.Test{Id: id}
 	if err := o.Read(&test); err != nil {
-		c.Ctx.Output.SetStatus(404)
-		c.Ctx.Output.Body([]byte("Test not found"))
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 500)
 		return
 	}
-	if err := c.ParseForm(&test); err != nil {
-		c.Ctx.Output.SetStatus(400)
-		c.Ctx.Output.Body([]byte("Invalid input"))
+	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
 	if _, err := o.Update(&test); err != nil {
-		c.Ctx.Output.SetStatus(500)
-		c.Ctx.Output.Body([]byte("Error updating test"))
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
 	}
-	c.Data["json"] = test
-	c.ServeJSON()
+	models.RespondWithJSON(&c.Controller, "更新成功", test)
 }
 
 // @Title 删除测试数据
@@ -134,16 +120,18 @@ func (c *TestController) UpdateTest() {
 func (c *TestController) DeleteTest() {
 	id, err := c.GetInt(":id")
 	if err != nil {
-		c.Ctx.Output.SetStatus(400)
-		c.Ctx.Output.Body([]byte("Invalid test ID"))
+		models.RespondWithJSON(&c.Controller, "删除失败", map[string]string{"error": err.Error()}, 404, 400)
 		return
 	}
 	o := orm.NewOrm()
 	test := models.Test{Id: id}
-	if _, err := o.Delete(&test); err != nil {
-		c.Ctx.Output.SetStatus(404)
-		c.Ctx.Output.Body([]byte("Test not found"))
+	if err := o.Read(&test); err != nil {
+		models.RespondWithJSON(&c.Controller, "删除失败", map[string]string{"error": err.Error()}, 404, 500)
 		return
 	}
-	c.Ctx.Output.SetStatus(204) // No content
+	if _, err := o.Delete(&test); err != nil {
+		models.RespondWithJSON(&c.Controller, "删除失败", map[string]string{"error": err.Error()}, 404, 500)
+		return
+	}
+	models.RespondWithJSON(&c.Controller, "删除成功", nil)
 }
