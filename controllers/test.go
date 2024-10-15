@@ -13,6 +13,10 @@ type TestController struct {
 	web.Controller
 }
 
+// @Title 获取所有测试数据
+// @Description 获取所有测试数据
+// @Success 200 {array} models.Test
+// @Failure 500 获取数据失败
 // @router / [get]
 func (c *TestController) GetTests() {
 	var tests []models.Test
@@ -27,11 +31,12 @@ func (c *TestController) GetTests() {
 	c.ServeJSON()
 }
 
-// @Title 创建test
-// @Description 创建test
-// @Param	body		body 	models.Test	true		"body for test content"
-// @Success 200 {int} models.User
-// @Failure 403 body is empty
+// @Title 创建测试数据
+// @Description 创建一条测试数据
+// @Param	body		body 	models.Test	true	"传入的测试数据"
+// @Success 201 {object} models.Test
+// @Failure 400 请求体格式错误
+// @Failure 500 创建数据失败
 // @router / [post]
 func (c *TestController) CreateTest() {
 	var test models.Test
@@ -57,6 +62,12 @@ func (c *TestController) CreateTest() {
 	c.ServeJSON()
 }
 
+// @Title 获取指定测试数据
+// @Description 根据ID获取单条测试数据
+// @Param	id		path 	int	true	"测试数据ID"
+// @Success 200 {object} models.Test
+// @Failure 400 无效的ID
+// @Failure 404 数据不存在
 // @router /:id [get]
 func (c *TestController) GetTest() {
 	id, err := c.GetInt(":id")
@@ -76,6 +87,14 @@ func (c *TestController) GetTest() {
 	c.ServeJSON()
 }
 
+// @Title 更新测试数据
+// @Description 更新指定ID的测试数据
+// @Param	id		path 	int	true	"测试数据ID"
+// @Param	body	body 	models.Test	true	"更新后的测试数据"
+// @Success 200 {object} models.Test
+// @Failure 400 请求体格式错误
+// @Failure 404 数据不存在
+// @Failure 500 更新失败
 // @router /:id [put]
 func (c *TestController) UpdateTest() {
 	id, err := c.GetInt(":id")
@@ -105,6 +124,12 @@ func (c *TestController) UpdateTest() {
 	c.ServeJSON()
 }
 
+// @Title 删除测试数据
+// @Description 根据ID删除测试数据
+// @Param	id		path 	int	true	"测试数据ID"
+// @Success 204 {string} 空
+// @Failure 400 无效的ID
+// @Failure 404 数据不存在
 // @router /:id [delete]
 func (c *TestController) DeleteTest() {
 	id, err := c.GetInt(":id")
