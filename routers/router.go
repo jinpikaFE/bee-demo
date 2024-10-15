@@ -15,16 +15,15 @@ import (
 
 func init() {
 	ns := beego.NewNamespace("/v1",
-		beego.NSNamespace("/object",
+		beego.NSNamespace("/test",
+			// 走注解路由
 			beego.NSInclude(
-				&controllers.ObjectController{},
+				&controllers.TestController{},
 			),
-		),
-		beego.NSNamespace("/user",
-			beego.NSInclude(
-				&controllers.UserController{},
-			),
+			// // 指定方法
+			// beego.NSRouter("", &controllers.TestController{}, "get:GetTests;post:CreateTest"),
 		),
 	)
 	beego.AddNamespace(ns)
+
 }
