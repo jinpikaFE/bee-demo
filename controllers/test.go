@@ -47,8 +47,24 @@ func (c *TestController) GetTestsPage() {
 	// 计算偏移量
 	offset := (page - 1) * pageSize
 
+	querySeter := o.QueryTable(new(models.Test))
+
+	// 获取可选的查询条件
+	name := c.GetString("name")
+	// status, _ := c.GetInt("status", -1) // 使用 -1 作为默认值，表示不筛选状态
+	age, ageErr := c.GetInt("age") // 使用 -1 作为默认值，表示不筛选状态
+
+	// 动态添加条件查询
+	if name != "" {
+		querySeter = querySeter.Filter("name__icontains", name) // 模糊查询
+	}
+
+	if ageErr == nil {
+		querySeter = querySeter.Filter("age", age) // 精确匹配状态
+	}
+
 	// 查询数据，使用 Limit 和 Offset 实现分页
-	_, err := o.QueryTable(new(models.Test)).Limit(pageSize, offset).All(&tests)
+	_, err := querySeter.Limit(pageSize, offset).All(&tests)
 	if err != nil {
 		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
@@ -56,7 +72,7 @@ func (c *TestController) GetTestsPage() {
 
 	// 查询总记录数
 	var totals int64
-	totals, err = o.QueryTable(new(models.Test)).Count()
+	totals, err = querySeter.Count()
 	if err != nil {
 		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
