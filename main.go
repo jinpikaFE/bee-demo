@@ -1,12 +1,14 @@
 package main
 
 import (
-	_ "github.com/go-sql-driver/mysql"
 	_ "bee-demo/routers"
 	"fmt"
 	"log"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/beego/beego/v2/adapter/orm"
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
 )
@@ -56,6 +58,10 @@ func getConfigBoolValue(key string) bool {
 }
 
 func init() {
+	// logs.SetLogger("console")
+	logs.SetLogger(logs.AdapterMultiFile, `{"filename":"./log/test.log","separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"]}`)
+	logs.EnableFuncCallDepth(true)
+
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	// 初始化数据库配置
 	config := initDBConfig()
@@ -64,7 +70,7 @@ func init() {
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s",
 		config.User, config.Password, config.Host, config.Port, config.Name, config.Charset)
 
-		log.Printf(connStr)
+	logs.Info("this %s cat is %v years old", "yellow", 3)
 
 	// 注册数据库
 	orm.RegisterDataBase("default", "mysql", connStr)
