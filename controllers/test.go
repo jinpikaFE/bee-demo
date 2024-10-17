@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/beego/beego/v2/client/orm"
+	"github.com/beego/beego/v2/core/validation"
 	"github.com/beego/beego/v2/server/web"
 )
 
@@ -54,6 +55,20 @@ func (c *TestController) GetTestsPage() {
 	// status, _ := c.GetInt("status", -1) // 使用 -1 作为默认值，表示不筛选状态
 	age, ageErr := c.GetInt("age") // 使用 -1 作为默认值，表示不筛选状态
 
+	valid := validation.Validation{}
+	valid.Required(name, "name").Message("必须的")
+	// valid.MaxSize(age, 15, "ageMax")
+	valid.Range(age, 0, 110, "age")
+
+	if valid.HasErrors() {
+		// 如果有错误信息，证明验证没通过
+		// 打印错误信息
+		for _, err := range valid.Errors {
+			models.RespondWithJSON(&c.Controller, "查询失败", err.Key+err.Message, 400, 400)
+			return
+		}
+	}
+
 	// 动态添加条件查询
 	if name != "" {
 		querySeter = querySeter.Filter("name__icontains", name) // 模糊查询
@@ -98,12 +113,23 @@ func (c *TestController) GetTestsPage() {
 // @router / [post]
 func (c *TestController) CreateTest() {
 	var test models.Test
+	valid := validation.Validation{}
 
 	// 使用通用解析函数处理请求体
 	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
 
 		models.RespondWithJSON(&c.Controller, "", map[string]string{"error": err.Error()}, 400, 400)
 		return
+	}
+
+	valid.Valid(&test)
+	if valid.HasErrors() {
+		// 如果有错误信息，证明验证没通过
+		// 打印错误信息
+		for _, err := range valid.Errors {
+			models.RespondWithJSON(&c.Controller, "查询失败", err.Key+err.Message, 400, 400)
+			return
+		}
 	}
 
 	log.Println(&test)

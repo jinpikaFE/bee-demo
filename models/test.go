@@ -6,8 +6,8 @@ import (
 
 type Test struct {
 	Id   int
-	Name string `orm:"size(100)" json:"name" xml:"name" form:"name"`
-	Age  int    `json:"age" xml:"age" form:"age"`
+	Name string `orm:"size(100)" json:"name" xml:"name" form:"name" valid:"Required"`
+	Age  int    `json:"age" xml:"age" form:"age" valid:"Required"`
 }
 
 func init() {
