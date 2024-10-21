@@ -29,7 +29,7 @@
                         "description": "登录参数",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.LoginParams"
+                            "$ref": "#/definitions/formvalidate.LoginParams"
                         }
                     }
                 ],
@@ -40,6 +40,40 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/models.LoginParams"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "获取数据失败"
+                    }
+                }
+            }
+        },
+        "/login/register": {
+            "post": {
+                "tags": [
+                    "login"
+                ],
+                "description": "注册\n\u003cbr\u003e",
+                "operationId": "LoginController.注册",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "注册",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/formvalidate.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
                             }
                         }
                     },
@@ -84,7 +118,7 @@
                         "description": "传入的测试数据",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Test"
+                            "$ref": "#/definitions/formvalidate.Test"
                         }
                     }
                 ],
@@ -196,7 +230,7 @@
                         "description": "更新后的测试数据",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Test"
+                            "$ref": "#/definitions/formvalidate.Test"
                         }
                     }
                 ],
@@ -282,7 +316,7 @@
                         "description": "传入的用户数据",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/formvalidate.User"
                         }
                     }
                 ],
@@ -414,7 +448,7 @@
                         "description": "更新后的用户数据",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/formvalidate.User"
                         }
                     }
                 ],
@@ -467,7 +501,7 @@
         }
     },
     "definitions": {
-        "models.LoginParams": {
+        "formvalidate.LoginParams": {
             "title": "LoginParams",
             "type": "object",
             "properties": {
@@ -479,15 +513,15 @@
                 }
             }
         },
-        "models.Test": {
+        "formvalidate.Test": {
             "title": "Test",
             "type": "object",
             "properties": {
-                "Id": {
+                "age": {
                     "type": "integer",
                     "format": "int64"
                 },
-                "age": {
+                "id": {
                     "type": "integer",
                     "format": "int64"
                 },
@@ -496,7 +530,7 @@
                 }
             }
         },
-        "models.User": {
+        "formvalidate.User": {
             "title": "User",
             "type": "object",
             "properties": {
@@ -506,6 +540,59 @@
                 },
                 "password": {
                     "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.LoginParams": {
+            "title": "LoginParams",
+            "type": "object"
+        },
+        "models.Test": {
+            "title": "Test",
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "datetime"
+                }
+            }
+        },
+        "models.User": {
+            "title": "User",
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "datetime"
                 },
                 "userName": {
                     "type": "string"

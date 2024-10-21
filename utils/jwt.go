@@ -23,7 +23,7 @@ type MyCustomClaims struct {
 // This struct is the parsing of token payload
 // 此结构是对token有效负载的解析
 type JwtPayload struct {
-	Username  string `json:"username"`
+	UserName  string `json:"userName"`
 	UserID    int    `json:"userID"`
 	IssuedAt  int64  `json:"iat"` // 发布日期
 	ExpiresAt int64  `json:"exp"` // 过期时间
@@ -55,7 +55,7 @@ func CheckToken(tokenString string) (*JwtPayload, error) {
 	})
 	claims, _ := token.Claims.(jwt.MapClaims)
 	return &JwtPayload{
-		Username:  claims["userName"].(string),     // 用户名：发行者
+		UserName:  claims["userName"].(string),     // 用户名：发行者
 		UserID:    int(claims["userID"].(float64)), // 转换为int
 		IssuedAt:  int64(claims["iat"].(float64)),  // 转换为int64
 		ExpiresAt: int64(claims["exp"].(float64)),  // 转换为int64

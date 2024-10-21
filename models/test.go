@@ -1,13 +1,17 @@
 package models
 
 import (
+	"time"
+
 	"github.com/beego/beego/v2/client/orm"
 )
 
 type Test struct {
-	Id   int
-	Name string `orm:"size(100)" json:"name" xml:"name" form:"name" valid:"Required"`
-	Age  int    `json:"age" xml:"age" form:"age" valid:"Required"`
+	Id        int       `orm:"auto" json:"id"`
+	CreatedAt time.Time `orm:"auto_now_add;type(datetime)" json:"createdAt"`
+	UpdatedAt time.Time `orm:"auto_now;type(datetime)" json:"updatedAt"`
+	Name      string    `orm:"size(100)" json:"name"`
+	Age       int       `json:"age"`
 }
 
 func init() {

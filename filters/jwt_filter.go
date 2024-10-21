@@ -31,5 +31,5 @@ func JwtFilter(ctx *context.Context) {
 
 	// 将用户信息存入上下文
 	ctx.Input.SetData("userID", claims.UserID)
-	ctx.Input.SetData("username", claims.Username)
+	ctx.Input.SetData("userName", claims.UserName)
 }

@@ -26,7 +26,7 @@ paths:
         description: 登录参数
         required: true
         schema:
-          $ref: '#/definitions/models.LoginParams'
+          $ref: '#/definitions/formvalidate.LoginParams'
       responses:
         "200":
           description: ""
@@ -34,6 +34,30 @@ paths:
             type: array
             items:
               $ref: '#/definitions/models.LoginParams'
+        "500":
+          description: 获取数据失败
+  /login/register:
+    post:
+      tags:
+      - login
+      description: |-
+        注册
+        <br>
+      operationId: LoginController.注册
+      parameters:
+      - in: body
+        name: body
+        description: 注册
+        required: true
+        schema:
+          $ref: '#/definitions/formvalidate.User'
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/models.User'
         "500":
           description: 获取数据失败
   /test/:
@@ -66,7 +90,7 @@ paths:
         description: 传入的测试数据
         required: true
         schema:
-          $ref: '#/definitions/models.Test'
+          $ref: '#/definitions/formvalidate.Test'
       responses:
         "201":
           description: ""
@@ -119,7 +143,7 @@ paths:
         description: 更新后的测试数据
         required: true
         schema:
-          $ref: '#/definitions/models.Test'
+          $ref: '#/definitions/formvalidate.Test'
       responses:
         "200":
           description: ""
@@ -210,7 +234,7 @@ paths:
         description: 传入的用户数据
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/formvalidate.User'
       responses:
         "201":
           description: ""
@@ -263,7 +287,7 @@ paths:
         description: 更新后的用户数据
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/formvalidate.User'
       responses:
         "200":
           description: ""
@@ -340,7 +364,7 @@ paths:
         "500":
           description: 获取数据失败
 definitions:
-  models.LoginParams:
+  formvalidate.LoginParams:
     title: LoginParams
     type: object
     properties:
@@ -348,19 +372,19 @@ definitions:
         type: string
       userName:
         type: string
-  models.Test:
+  formvalidate.Test:
     title: Test
     type: object
     properties:
-      Id:
+      age:
         type: integer
         format: int64
-      age:
+      id:
         type: integer
         format: int64
       name:
         type: string
-  models.User:
+  formvalidate.User:
     title: User
     type: object
     properties:
@@ -369,5 +393,43 @@ definitions:
         format: int64
       password:
         type: string
+      userName:
+        type: string
+  models.LoginParams:
+    title: LoginParams
+    type: object
+  models.Test:
+    title: Test
+    type: object
+    properties:
+      age:
+        type: integer
+        format: int64
+      createdAt:
+        type: string
+        format: datetime
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      updatedAt:
+        type: string
+        format: datetime
+  models.User:
+    title: User
+    type: object
+    properties:
+      createdAt:
+        type: string
+        format: datetime
+      id:
+        type: integer
+        format: int64
+      password:
+        type: string
+      updatedAt:
+        type: string
+        format: datetime
       userName:
         type: string

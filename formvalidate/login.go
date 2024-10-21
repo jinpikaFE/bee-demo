@@ -1,4 +1,4 @@
-package models
+package formvalidate
 
 type LoginParams struct {
 	UserName string `json:"userName" xml:"userName" form:"userName" valid:"Required"`

@@ -1,10 +1,10 @@
 package controllers
 
 import (
+	"bee-demo/formvalidate"
 	"bee-demo/models"
 	"bee-demo/utils"
 	"errors"
-	"log"
 
 	"github.com/beego/beego/v2/adapter/logs"
 	"github.com/beego/beego/v2/client/orm"
@@ -108,43 +108,46 @@ func (c *UserController) GetUsersPage() {
 
 // @Title 创建用户数据
 // @Description 创建一条用户数据
-// @Param	body		body 	models.User	true	"传入的用户数据"
+// @Param	body		body 	formvalidate.User	true	"传入的用户数据"
 // @Success 201 {object} models.User
 // @Failure 400 请求体格式错误
 // @Failure 500 创建数据失败
 // @router / [post]
 func (c *UserController) CreateUser() {
-	var user models.User
+	var userForm formvalidate.User
 
 	// 使用通用解析函数处理请求体
-	if err := utils.ParseRequestBody(&c.Controller, &user); err != nil {
+	if err := utils.ParseRequestBody(&c.Controller, &userForm); err != nil {
 
 		models.RespondWithJSON(&c.Controller, "", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
 
-	if err := utils.ValidParams(&user); err != nil {
+	if err := utils.ValidParams(&userForm); err != nil {
 		// 如果有错误信息，证明验证没通过
 		// 打印错误信息
 		models.RespondWithJSON(&c.Controller, "创建失败", err.Key+err.Message, 400, 400)
 		return
 	}
 
-	log.Println(&user)
-	password, hashErr := utils.HashPassword(user.Password)
+	password, hashErr := utils.HashPassword(userForm.Password)
 	if hashErr != nil {
 		models.RespondWithJSON(&c.Controller, "创建失败", map[string]string{"error": hashErr.Error()}, 500, 500)
 		return
 	}
-	user.Password = password
+
+	userModel := models.User{
+		Password: password,
+		UserName: userForm.UserName,
+	}
 
 	o := orm.NewOrm()
-	_, err := o.Insert(&user)
+	_, err := o.Insert(&userModel)
 	if err != nil {
 		models.RespondWithJSON(&c.Controller, "创建失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
 	}
-	models.RespondWithJSON(&c.Controller, "创建成功", user)
+	models.RespondWithJSON(&c.Controller, "创建成功", userModel)
 }
 
 // @Title 获取指定用户数据
@@ -190,28 +193,38 @@ func (c *UserController) GetUserCurrent() {
 // @Title 更新用户数据
 // @Description 更新指定ID的用户数据
 // @Param	id		path 	int	true	"用户数据ID"
-// @Param	body	body 	models.User	true	"更新后的用户数据"
+// @Param	body	body 	formvalidate.User	true	"更新后的用户数据"
 // @Success 200 {object} models.User
 // @Failure 400 请求体格式错误
 // @Failure 404 数据不存在
 // @Failure 500 更新失败
 // @router /:id [put]
 func (c *UserController) UpdateUser() {
+	var userForm formvalidate.User
 	id, err := c.GetInt(":id")
 	if err != nil {
 		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 400)
 		return
 	}
-	o := orm.NewOrm()
-	user := models.User{Id: id}
-	if err := o.Read(&user); err != nil {
-		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 500)
-		return
-	}
-	if err := utils.ParseRequestBody(&c.Controller, &user); err != nil {
+	if err := utils.ParseRequestBody(&c.Controller, &userForm); err != nil {
 		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
+
+	o := orm.NewOrm()
+
+	if err := o.Read(&models.User{Id: id}); err != nil {
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 500)
+		return
+	}
+
+	user := models.User{Id: id}
+
+	if err := utils.UpdateModel(o, id, &user, userForm, "Password"); err != nil {
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 500, 500)
+		return
+	}
+
 	if _, err := o.Update(&user); err != nil {
 		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
@@ -245,7 +258,7 @@ func (c *UserController) DeleteUser() {
 	models.RespondWithJSON(&c.Controller, "删除成功", nil)
 }
 
-func (c *UserController) GetUserByLogin(loginParams *models.LoginParams) (*models.User, error) {
+func (c *UserController) GetUserByLogin(loginParams *formvalidate.LoginParams) (*models.User, error) {
 	o := orm.NewOrm()
 	user := models.User{UserName: loginParams.UserName}
 

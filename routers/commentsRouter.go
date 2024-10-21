@@ -16,6 +16,15 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["bee-demo/controllers:LoginController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:LoginController"],
+        beego.ControllerComments{
+            Method: "Register",
+            Router: `/register`,
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["bee-demo/controllers:TestController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:TestController"],
         beego.ControllerComments{
             Method: "GetTests",

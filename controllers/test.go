@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"bee-demo/formvalidate"
 	"bee-demo/models"
 	"bee-demo/utils"
-	"log"
 
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
@@ -106,36 +106,40 @@ func (c *TestController) GetTestsPage() {
 
 // @Title 创建测试数据
 // @Description 创建一条测试数据
-// @Param	body		body 	models.Test	true	"传入的测试数据"
+// @Param	body		body 	formvalidate.Test	true	"传入的测试数据"
 // @Success 201 {object} models.Test
 // @Failure 400 请求体格式错误
 // @Failure 500 创建数据失败
 // @router / [post]
 func (c *TestController) CreateTest() {
-	var test models.Test
+	var testForm formvalidate.Test
 
 	// 使用通用解析函数处理请求体
-	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
+	if err := utils.ParseRequestBody(&c.Controller, &testForm); err != nil {
 
 		models.RespondWithJSON(&c.Controller, "", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
 
-	if err := utils.ValidParams(&test); err != nil {
+	if err := utils.ValidParams(&testForm); err != nil {
 		// 如果有错误信息，证明验证没通过
 		// 打印错误信息
 		models.RespondWithJSON(&c.Controller, "创建失败", err.Key+err.Message, 400, 400)
 		return
 	}
 
-	log.Println(&test)
+	testModel := models.Test{
+		Name: testForm.Name,
+		Age:  testForm.Age,
+	}
+
 	o := orm.NewOrm()
-	_, err := o.Insert(&test)
+	_, err := o.Insert(&testModel)
 	if err != nil {
 		models.RespondWithJSON(&c.Controller, "创建失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
 	}
-	models.RespondWithJSON(&c.Controller, "创建成功", test)
+	models.RespondWithJSON(&c.Controller, "创建成功", testModel)
 }
 
 // @Title 获取指定测试数据
@@ -163,29 +167,36 @@ func (c *TestController) GetTest() {
 // @Title 更新测试数据
 // @Description 更新指定ID的测试数据
 // @Param	id		path 	int	true	"测试数据ID"
-// @Param	body	body 	models.Test	true	"更新后的测试数据"
+// @Param	body	body 	formvalidate.Test	true	"更新后的测试数据"
 // @Success 200 {object} models.Test
 // @Failure 400 请求体格式错误
 // @Failure 404 数据不存在
 // @Failure 500 更新失败
 // @router /:id [put]
 func (c *TestController) UpdateTest() {
+	var testForm formvalidate.Test
 	id, err := c.GetInt(":id")
 	if err != nil {
 		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 400)
 		return
 	}
-	o := orm.NewOrm()
-	test := models.Test{Id: id}
-	if err := o.Read(&test); err != nil {
-		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 500)
-		return
-	}
-	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
+
+	if err := utils.ParseRequestBody(&c.Controller, &testForm); err != nil {
 		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 400, 400)
 		return
 	}
-	if _, err := o.Update(&test); err != nil {
+
+	o := orm.NewOrm()
+	if err := o.Read(&models.Test{Id: id}); err != nil {
+		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 404, 500)
+		return
+	}
+
+	test := models.Test{
+		Id: id,
+	}
+
+	if err := utils.UpdateModel(o, id, &test, testForm); err != nil {
 		models.RespondWithJSON(&c.Controller, "更新失败", map[string]string{"error": err.Error()}, 500, 500)
 		return
 	}

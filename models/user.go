@@ -1,13 +1,17 @@
 package models
 
 import (
+	"time"
+
 	"github.com/beego/beego/v2/client/orm"
 )
 
 type User struct {
-	Id       int    `json:"id"`
-	UserName string `orm:"size(100);unique" json:"userName" xml:"userName" form:"userName" valid:"Required"`
-	Password string `json:"password" xml:"password" form:"password" valid:"Required"`
+	Id        int       `orm:"auto" json:"id"`
+	CreatedAt time.Time `orm:"auto_now_add;type(datetime)" json:"createdAt"`
+	UpdatedAt time.Time `orm:"auto_now;type(datetime)" json:"updatedAt"`
+	UserName  string    `orm:"size(100);unique" json:"userName"`
+	Password  string    `json:"password"`
 }
 
 func init() {

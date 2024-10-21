@@ -1,11 +1,21 @@
 package models
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"time"
+
+	"github.com/beego/beego/v2/server/web"
+)
 
 type ApiResponse struct {
 	Code int         `json:"code"`
 	Msg  string      `json:"msg,omitempty"`
 	Data interface{} `json:"data,omitempty"`
+}
+
+type CommonModel struct {
+	Id        int       `orm:"auto" json:"id"`
+	CreatedAt time.Time `orm:"auto_now_add;type(datetime)" json:"createdAt"`
+	UpdatedAt time.Time `orm:"auto_now;type(datetime)" json:"updatedAt"`
 }
 
 // 返回统一格式的响应
