@@ -43,7 +43,7 @@ func (c *LoginController) Login() {
 	}
 
 	token := utils.CreateToken(user)
-	models.RespondWithJSON(&c.Controller, "登录成功", token)
+	models.RespondWithJSON(&c.Controller, "登录成功", map[string]interface{}{"token": token, "userID": user.Id, "userName": user.UserName})
 	// o := orm.NewOrm()
 	// _, err := o.QueryTable(new(models.User)).All(&users)
 	// if err != nil {

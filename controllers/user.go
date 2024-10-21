@@ -6,6 +6,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/beego/beego/v2/adapter/logs"
 	"github.com/beego/beego/v2/client/orm"
 	"github.com/beego/beego/v2/core/validation"
 	"github.com/beego/beego/v2/server/web"
@@ -161,6 +162,24 @@ func (c *UserController) GetUser() {
 	}
 	o := orm.NewOrm()
 	user := models.User{Id: id}
+	if err := o.Read(&user); err != nil {
+		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 404, 500)
+		return
+	}
+	models.RespondWithJSON(&c.Controller, "查询成功", user)
+}
+
+// @Title 获取当前用户信息
+// @Description 获取当前用户信息
+// @Success 200 {object} models.User
+// @Failure 404 数据不存在
+// @router /current [get]
+func (c *UserController) GetUserCurrent() {
+	userID := c.Ctx.Input.GetData("userID").(int)
+	logs.Info("用户ID:", userID)
+
+	o := orm.NewOrm()
+	user := models.User{Id: userID}
 	if err := o.Read(&user); err != nil {
 		models.RespondWithJSON(&c.Controller, "查询失败", map[string]string{"error": err.Error()}, 404, 500)
 		return

@@ -296,6 +296,21 @@ paths:
           description: 无效的ID
         "404":
           description: 数据不存在
+  /user/current:
+    get:
+      tags:
+      - user
+      description: |-
+        获取当前用户信息
+        <br>
+      operationId: UserController.获取当前用户信息
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: 数据不存在
   /user/page:
     get:
       tags:

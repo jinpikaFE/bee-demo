@@ -117,6 +117,15 @@ func init() {
 
     beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
         beego.ControllerComments{
+            Method: "GetUserCurrent",
+            Router: `/current`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
             Method: "GetUsersPage",
             Router: `/page`,
             AllowHTTPMethods: []string{"get"},

@@ -9,6 +9,7 @@ package routers
 
 import (
 	"bee-demo/controllers"
+	"bee-demo/filters"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
@@ -38,5 +39,7 @@ func init() {
 		),
 	)
 	beego.AddNamespace(ns)
+
+	beego.InsertFilter("/v1/user/*", beego.BeforeRouter, filters.JwtFilter)
 
 }
