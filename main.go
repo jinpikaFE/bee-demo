@@ -2,14 +2,13 @@ package main
 
 import (
 	_ "bee-demo/routers"
+	"bee-demo/utils"
 	"fmt"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/beego/beego/v2/adapter/orm"
 	"github.com/beego/beego/v2/core/logs"
-	"github.com/beego/beego/v2/server/web"
 	beego "github.com/beego/beego/v2/server/web"
 )
 
@@ -25,36 +24,19 @@ type DBConfig struct {
 }
 
 // 获取配置值的通用函数
-func getConfigValue(key string) string {
-	value, err := web.AppConfig.String(key)
-	if err != nil {
-		log.Fatalf("Failed to load %s: %v", key, err)
-	}
-	return value
-}
 
 // 初始化数据库配置
 func initDBConfig() *DBConfig {
 	// 从配置文件中读取数据库配置
 	return &DBConfig{
-		User:     getConfigValue("db_user"),
-		Password: getConfigValue("db_password"),
-		Host:     getConfigValue("db_host"),
-		Port:     getConfigValue("db_port"),
-		Name:     getConfigValue("db_name"),
-		Charset:  getConfigValue("db_charset"),
-		Debug:    getConfigBoolValue("db_debug"),
+		User:     utils.GetConfigValue("db_user"),
+		Password: utils.GetConfigValue("db_password"),
+		Host:     utils.GetConfigValue("db_host"),
+		Port:     utils.GetConfigValue("db_port"),
+		Name:     utils.GetConfigValue("db_name"),
+		Charset:  utils.GetConfigValue("db_charset"),
+		Debug:    utils.GetConfigBoolValue("db_debug"),
 	}
-}
-
-// 获取布尔值配置的通用函数
-func getConfigBoolValue(key string) bool {
-	value, err := web.AppConfig.Bool(key)
-	if err != nil {
-		log.Printf("Failed to load %s, using default (false): %v", key, err)
-		return false
-	}
-	return value
 }
 
 func init() {
@@ -70,8 +52,6 @@ func init() {
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s",
 		config.User, config.Password, config.Host, config.Port, config.Name, config.Charset)
 
-	logs.Info("this %s cat is %v years old", "yellow", 3)
-
 	// 注册数据库
 	orm.RegisterDataBase("default", "mysql", connStr)
 
@@ -83,6 +63,8 @@ func init() {
 		orm.Debug = true
 	}
 }
+
+// 项目运行命令 bee run -gendoc=true -downdoc=true
 
 func main() {
 	if beego.BConfig.RunMode == "dev" {

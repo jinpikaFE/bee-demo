@@ -61,4 +61,58 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "GetUsers",
+            Router: `/`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "CreateUser",
+            Router: `/`,
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "GetUser",
+            Router: `/:id`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "UpdateUser",
+            Router: `/:id`,
+            AllowHTTPMethods: []string{"put"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "DeleteUser",
+            Router: `/:id`,
+            AllowHTTPMethods: []string{"delete"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["bee-demo/controllers:UserController"] = append(beego.GlobalControllerRouter["bee-demo/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "GetUsersPage",
+            Router: `/page`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
 }

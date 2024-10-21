@@ -15,6 +15,7 @@ import (
 
 func init() {
 	ns := beego.NewNamespace("/v1",
+		// bee generate routers 命令 生成 commentsRouter 路由
 		beego.NSNamespace("/test",
 			// 走注解路由
 			beego.NSInclude(
@@ -22,6 +23,12 @@ func init() {
 			),
 			// // 指定方法
 			// beego.NSRouter("", &controllers.TestController{}, "get:GetTests;post:CreateTest"),
+		),
+		beego.NSNamespace("/user",
+			// 走注解路由
+			beego.NSInclude(
+				&controllers.UserController{},
+			),
 		),
 	)
 	beego.AddNamespace(ns)
