@@ -113,7 +113,6 @@ func (c *TestController) GetTestsPage() {
 // @router / [post]
 func (c *TestController) CreateTest() {
 	var test models.Test
-	valid := validation.Validation{}
 
 	// 使用通用解析函数处理请求体
 	if err := utils.ParseRequestBody(&c.Controller, &test); err != nil {
@@ -122,14 +121,11 @@ func (c *TestController) CreateTest() {
 		return
 	}
 
-	valid.Valid(&test)
-	if valid.HasErrors() {
+	if err := utils.ValidParams(&test); err != nil {
 		// 如果有错误信息，证明验证没通过
 		// 打印错误信息
-		for _, err := range valid.Errors {
-			models.RespondWithJSON(&c.Controller, "查询失败", err.Key+err.Message, 400, 400)
-			return
-		}
+		models.RespondWithJSON(&c.Controller, "创建失败", err.Key+err.Message, 400, 400)
+		return
 	}
 
 	log.Println(&test)

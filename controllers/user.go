@@ -14,8 +14,8 @@ type UserController struct {
 	web.Controller
 }
 
-// @Title 获取所有测试数据
-// @Description 获取所有测试数据
+// @Title 获取所有用户数据
+// @Description 获取所有用户数据
 // @Success 200 {array} models.User
 // @Failure 500 获取数据失败
 // @router / [get]
@@ -30,8 +30,8 @@ func (c *UserController) GetUsers() {
 	models.RespondWithJSON(&c.Controller, "查询成功", users)
 }
 
-// @Title 获取所有测试数据
-// @Description 获取所有测试数据
+// @Title 获取所有用户数据
+// @Description 获取所有用户数据
 // @Param page query int false "页码，默认 1"
 // @Param pageSize query int false "每页数量，默认 10"
 // @Success 200 {array} models.User
@@ -104,16 +104,15 @@ func (c *UserController) GetUsersPage() {
 	models.RespondWithJSON(&c.Controller, "查询成功", response)
 }
 
-// @Title 创建测试数据
-// @Description 创建一条测试数据
-// @Param	body		body 	models.User	true	"传入的测试数据"
+// @Title 创建用户数据
+// @Description 创建一条用户数据
+// @Param	body		body 	models.User	true	"传入的用户数据"
 // @Success 201 {object} models.User
 // @Failure 400 请求体格式错误
 // @Failure 500 创建数据失败
 // @router / [post]
 func (c *UserController) CreateUser() {
 	var user models.User
-	valid := validation.Validation{}
 
 	// 使用通用解析函数处理请求体
 	if err := utils.ParseRequestBody(&c.Controller, &user); err != nil {
@@ -122,14 +121,11 @@ func (c *UserController) CreateUser() {
 		return
 	}
 
-	valid.Valid(&user)
-	if valid.HasErrors() {
+	if err := utils.ValidParams(&user); err != nil {
 		// 如果有错误信息，证明验证没通过
 		// 打印错误信息
-		for _, err := range valid.Errors {
-			models.RespondWithJSON(&c.Controller, "查询失败", err.Key+err.Message, 400, 400)
-			return
-		}
+		models.RespondWithJSON(&c.Controller, "创建失败", err.Key+err.Message, 400, 400)
+		return
 	}
 
 	log.Println(&user)
@@ -142,9 +138,9 @@ func (c *UserController) CreateUser() {
 	models.RespondWithJSON(&c.Controller, "创建成功", user)
 }
 
-// @Title 获取指定测试数据
-// @Description 根据ID获取单条测试数据
-// @Param	id		path 	int	true	"测试数据ID"
+// @Title 获取指定用户数据
+// @Description 根据ID获取单条用户数据
+// @Param	id		path 	int	true	"用户数据ID"
 // @Success 200 {object} models.User
 // @Failure 400 无效的ID
 // @Failure 404 数据不存在
@@ -164,10 +160,10 @@ func (c *UserController) GetUser() {
 	models.RespondWithJSON(&c.Controller, "查询成功", user)
 }
 
-// @Title 更新测试数据
-// @Description 更新指定ID的测试数据
-// @Param	id		path 	int	true	"测试数据ID"
-// @Param	body	body 	models.User	true	"更新后的测试数据"
+// @Title 更新用户数据
+// @Description 更新指定ID的用户数据
+// @Param	id		path 	int	true	"用户数据ID"
+// @Param	body	body 	models.User	true	"更新后的用户数据"
 // @Success 200 {object} models.User
 // @Failure 400 请求体格式错误
 // @Failure 404 数据不存在
@@ -196,9 +192,9 @@ func (c *UserController) UpdateUser() {
 	models.RespondWithJSON(&c.Controller, "更新成功", user)
 }
 
-// @Title 删除测试数据
-// @Description 根据ID删除测试数据
-// @Param	id		path 	int	true	"测试数据ID"
+// @Title 删除用户数据
+// @Description 根据ID删除用户数据
+// @Param	id		path 	int	true	"用户数据ID"
 // @Success 204 {string} 空
 // @Failure 400 无效的ID
 // @Failure 404 数据不存在

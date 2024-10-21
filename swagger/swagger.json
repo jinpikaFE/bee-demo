@@ -218,8 +218,8 @@
                 "tags": [
                     "user"
                 ],
-                "description": "获取所有测试数据\n\u003cbr\u003e",
-                "operationId": "UserController.获取所有测试数据",
+                "description": "获取所有用户数据\n\u003cbr\u003e",
+                "operationId": "UserController.获取所有用户数据",
                 "responses": {
                     "200": {
                         "description": "",
@@ -239,13 +239,13 @@
                 "tags": [
                     "user"
                 ],
-                "description": "创建一条测试数据\n\u003cbr\u003e",
-                "operationId": "UserController.创建测试数据",
+                "description": "创建一条用户数据\n\u003cbr\u003e",
+                "operationId": "UserController.创建用户数据",
                 "parameters": [
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "传入的测试数据",
+                        "description": "传入的用户数据",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.User"
@@ -273,8 +273,8 @@
                 "tags": [
                     "user"
                 ],
-                "description": "获取所有测试数据\n\u003cbr\u003e",
-                "operationId": "UserController.获取所有测试数据",
+                "description": "获取所有用户数据\n\u003cbr\u003e",
+                "operationId": "UserController.获取所有用户数据",
                 "parameters": [
                     {
                         "in": "query",
@@ -312,13 +312,13 @@
                 "tags": [
                     "user"
                 ],
-                "description": "根据ID获取单条测试数据\n\u003cbr\u003e",
-                "operationId": "UserController.获取指定测试数据",
+                "description": "根据ID获取单条用户数据\n\u003cbr\u003e",
+                "operationId": "UserController.获取指定用户数据",
                 "parameters": [
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "测试数据ID",
+                        "description": "用户数据ID",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -343,13 +343,13 @@
                 "tags": [
                     "user"
                 ],
-                "description": "更新指定ID的测试数据\n\u003cbr\u003e",
-                "operationId": "UserController.更新测试数据",
+                "description": "更新指定ID的用户数据\n\u003cbr\u003e",
+                "operationId": "UserController.更新用户数据",
                 "parameters": [
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "测试数据ID",
+                        "description": "用户数据ID",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -357,7 +357,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "更新后的测试数据",
+                        "description": "更新后的用户数据",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.User"
@@ -386,13 +386,13 @@
                 "tags": [
                     "user"
                 ],
-                "description": "根据ID删除测试数据\n\u003cbr\u003e",
-                "operationId": "UserController.删除测试数据",
+                "description": "根据ID删除用户数据\n\u003cbr\u003e",
+                "operationId": "UserController.删除用户数据",
                 "parameters": [
                     {
                         "in": "path",
                         "name": "id",
-                        "description": "测试数据ID",
+                        "description": "用户数据ID",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -413,6 +413,18 @@
         }
     },
     "definitions": {
+        "models.LoginParams": {
+            "title": "LoginParams",
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Test": {
             "title": "Test",
             "type": "object",
