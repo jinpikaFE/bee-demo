@@ -11,7 +11,6 @@ func ValidParams(target interface{}) *validation.Error {
 	valid := validation.Validation{}
 
 	valid.Valid(target)
-	log.Println(target)
 	if valid.HasErrors() {
 		// 如果有错误信息，证明验证没通过
 		// 打印错误信息

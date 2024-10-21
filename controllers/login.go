@@ -13,12 +13,13 @@ type LoginController struct {
 
 // @Title 登录
 // @Description 登录
-// // @Param	body		body 	models.LoginParams	true	"登录参数"
+// @Param	body		body 	models.LoginParams	true	"登录参数"
 // @Success 200 {array} models.LoginParams
 // @Failure 500 获取数据失败
 // @router / [post]
 func (c *LoginController) Login() {
-	var loginParams []models.LoginParams
+	var loginParams models.LoginParams
+	userController := UserController{}
 
 	// 使用通用解析函数处理请求体
 	if err := utils.ParseRequestBody(&c.Controller, &loginParams); err != nil {
@@ -33,6 +34,16 @@ func (c *LoginController) Login() {
 		models.RespondWithJSON(&c.Controller, "登录失败", err.Key+err.Message, 400, 400)
 		return
 	}
+
+	user, err := userController.GetUserByLogin(&loginParams)
+	if err != nil {
+		// 处理错误
+		models.RespondWithJSON(&c.Controller, "登录失败", map[string]string{"error": err.Error()}, 400, 400)
+		return
+	}
+
+	token := utils.CreateToken(user)
+	models.RespondWithJSON(&c.Controller, "登录成功", token)
 	// o := orm.NewOrm()
 	// _, err := o.QueryTable(new(models.User)).All(&users)
 	// if err != nil {

@@ -5,8 +5,8 @@ import (
 )
 
 type User struct {
-	Id       int `json:"id"`
-	UserName string `orm:"size(100)" json:"userName" xml:"userName" form:"userName" valid:"Required"`
+	Id       int    `json:"id"`
+	UserName string `orm:"size(100);unique" json:"userName" xml:"userName" form:"userName" valid:"Required"`
 	Password string `json:"password" xml:"password" form:"password" valid:"Required"`
 }
 

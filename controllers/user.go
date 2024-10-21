@@ -3,6 +3,7 @@ package controllers
 import (
 	"bee-demo/models"
 	"bee-demo/utils"
+	"errors"
 	"log"
 
 	"github.com/beego/beego/v2/client/orm"
@@ -129,6 +130,13 @@ func (c *UserController) CreateUser() {
 	}
 
 	log.Println(&user)
+	password, hashErr := utils.HashPassword(user.Password)
+	if hashErr != nil {
+		models.RespondWithJSON(&c.Controller, "创建失败", map[string]string{"error": hashErr.Error()}, 500, 500)
+		return
+	}
+	user.Password = password
+
 	o := orm.NewOrm()
 	_, err := o.Insert(&user)
 	if err != nil {
@@ -216,4 +224,21 @@ func (c *UserController) DeleteUser() {
 		return
 	}
 	models.RespondWithJSON(&c.Controller, "删除成功", nil)
+}
+
+func (c *UserController) GetUserByLogin(loginParams *models.LoginParams) (*models.User, error) {
+	o := orm.NewOrm()
+	user := models.User{UserName: loginParams.UserName}
+
+	// 读取用户数据
+	if err := o.Read(&user, "UserName"); err != nil {
+		return nil, err
+	}
+
+	// 检查密码
+	if !utils.CheckPasswordHash(loginParams.Password, user.Password) {
+		return nil, errors.New("密码错误")
+	}
+
+	return &user, nil
 }

@@ -12,6 +12,30 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 basePath: /v1
 paths:
+  /login/:
+    post:
+      tags:
+      - login
+      description: |-
+        登录
+        <br>
+      operationId: LoginController.登录
+      parameters:
+      - in: body
+        name: body
+        description: 登录参数
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginParams'
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/models.LoginParams'
+        "500":
+          description: 获取数据失败
   /test/:
     get:
       tags:
