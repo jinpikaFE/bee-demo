@@ -204,6 +204,17 @@ paths:
               $ref: '#/definitions/models.Test'
         "500":
           description: 获取数据失败
+  /upload/:
+    post:
+      tags:
+      - upload
+      description: |-
+        文件上传
+        <br>
+      operationId: UploadController.文件上传
+      responses:
+        "500":
+          description: ""
   /user/:
     get:
       tags:

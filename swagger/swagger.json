@@ -281,6 +281,20 @@
                 }
             }
         },
+        "/upload/": {
+            "post": {
+                "tags": [
+                    "upload"
+                ],
+                "description": "文件上传\n\u003cbr\u003e",
+                "operationId": "UploadController.文件上传",
+                "responses": {
+                    "500": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/user/": {
             "get": {
                 "tags": [

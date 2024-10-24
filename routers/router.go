@@ -37,6 +37,12 @@ func init() {
 				&controllers.LoginController{},
 			),
 		),
+		beego.NSNamespace("/upload",
+			// 走注解路由
+			beego.NSInclude(
+				&controllers.UploadController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 

@@ -6,7 +6,12 @@ require github.com/beego/beego/v2 v2.1.0
 
 require github.com/smartystreets/goconvey v1.6.4
 
-require filippo.io/edwards25519 v1.1.0 // indirect
+require (
+	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/mozillazg/go-httpheader v0.2.1 // indirect
+)
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -27,6 +32,7 @@ require (
 	github.com/prometheus/procfs v0.9.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d // indirect
+	github.com/tencentyun/cos-go-sdk-v5 v0.7.55
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
